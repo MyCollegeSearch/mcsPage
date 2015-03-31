@@ -1,7 +1,0 @@
-Hello,
- Your PostgreSQL user is cs3380s15grp19
- Your PostgreSQL Password is iw2Gtb2E
- Your PostgreSQL host is dbhost-pgsql.cs.missouri.edu 
- Please contact support.cs@missouri.edu if there any problems,
- 
- Computer Science Support

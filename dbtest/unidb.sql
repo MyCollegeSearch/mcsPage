@@ -74,4 +74,4 @@ CREATE TABLE universities (
 	LATITUDE varchar(20)
 );
 
-\copy universities FROM '~cs3380s15grp19/unicsvtest/postscndryunivsrvy2013dirinfo.csv' WITH ( FORMAT CSV, HEADER, QUOTE '"', ENCODING 'LATIN1' ) ;
+\copy universities FROM '../unicsvtest/postscndryunivsrvy2013dirinfo.csv' WITH ( FORMAT CSV, HEADER, QUOTE '"', ENCODING 'LATIN1' ) ;

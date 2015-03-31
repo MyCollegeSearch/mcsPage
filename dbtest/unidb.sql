@@ -75,3 +75,4 @@ CREATE TABLE universities (
 );
 
 \copy universities FROM '../unicsvtest/postscndryunivsrvy2013dirinfo.csv' WITH ( FORMAT CSV, HEADER, QUOTE '"', ENCODING 'LATIN1' ) ;
+SELECT instnm FROM universities WHERE stabbr = 'MO';

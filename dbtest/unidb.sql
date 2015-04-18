@@ -104,7 +104,7 @@ CREATE TABLE offerings (
 	LEVEL17 varchar(8),
 	LEVEL18 varchar(8),
 	LEVEL19 varchar(8),
-	OPENADMP varchar(8),
+	OPENADMP integer,
 	ADMCON1 varchar(8),
 	ADMCON2 varchar(8),
 	ADMCON3 varchar(8),

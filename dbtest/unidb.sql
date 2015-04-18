@@ -258,7 +258,7 @@ CREATE TABLE offerings (
 \copy offerings FROM '../unicsvtest/postscndryunivsrvy2010edctnoffrngsaaupdated.csv' WITH ( FORMAT CSV, HEADER, QUOTE '"', ENCODING 'LATIN1' ) ;
 
 CREATE TABLE unistats AS
-	SELECT unitid, cntlaffi, level3, level5, level7, level19, openadmp, enrlt, webaddr, applurl, yrscoll
+	SELECT instnm, unitid, cntlaffi, level3, level5, level7, level19, openadmp, enrlt, webaddr, applurl, yrscoll
 	FROM universities INNER JOIN offerings USING(unitid);
 
 DROP TABLE IF EXISTS sfa;

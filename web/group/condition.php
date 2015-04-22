@@ -6,7 +6,7 @@
 <body>
 <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
 </br>Select the States<br/>
-<select name="Option">
+<select name="option">
         <option value="Al" >Al</option>
         <option value="AK" >AK</option>
         <option value="AZ" >AZ</option>
@@ -59,14 +59,17 @@
         <option value="WY" >WY</option>
 </select>
 <input type="submit" value="Next Step" onclick="javascript:form.action='condition1.php';"/>
+<!--input type ="submit" value ="next step"-->
 <br/> <a href="search.php">Go Back</a>
 <form/>
 <?php
 	SESSION_START();
-	$_SESSION["state"] = $_POST['option'];
-	$conn = pg_connect("host=dbhost-pgsql.cs.missouri.edu dbname=bsvm7 user=bsvm7 password=42GYnxfs") or die('Could not connect: ' . pg_last_error());
-	$result=pg_prepare($conn,"query","SELECT * from xx where name=$1");
-	$result=pg_execute($conn,"query",array(option));
-
+	$_SESSION['state'] = $_POST['option'];
+//	header("location: https://babbage.cs.missouri.edu/~bsvm7/cs3380/group/condition1.php");
+//	$conn = pg_connect("host=dbhost-pgsql.cs.missouri.edu dbname=bsvm7 user=bsvm7 password=42GYnxfs") or die('Could not connect: ' . pg_last_error());
+//	$result=pg_prepare($conn,"query","SELECT * from xx where name=$1");
+//	$result=pg_execute($conn,"query",array(option));
+//	echo "$_SESSION[state]";
+//	echo "$_POST[option] .111";
 ?>
 

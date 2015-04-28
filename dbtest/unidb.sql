@@ -3,6 +3,40 @@ CREATE SCHEMA unidb;
 
 SET search_path = unidb, public;
 
+CREATE TABLE regioncodes (
+	code smallint PRIMARY KEY,
+	description varchar(50)
+);
+
+INSERT INTO regioncodes VALUES
+	(0, 'US Service schools'),
+	(1, 'New England'),
+	(2, 'Mid East'),
+	(3, 'Great Lakes'),
+	(4, 'Plains'),
+	(5, 'Southeast'),
+	(6, 'Southwest'),
+	(7, 'Rocky Mountains'),
+	(8, 'Far West'),
+	(9, 'Outlying areas'),
+	(-3, 'Not available');
+
+CREATE TABLE stateregions(
+	code smallint,
+	STABBR varchar(2) PRIMARY KEY
+);
+
+INSERT INTO stateregions VALUES
+	(1, 'CT'), (1, 'ME'), (1, 'MA'), (1, 'NH'), (1, 'RI'), (1, 'VT'),
+	(2, 'DE'), (2, 'DC'), (2, 'MD'), (2, 'NJ'), (2, 'NY'), (2, 'PA'),
+	(3, 'IL'), (3, 'IN'), (3, 'MI'), (3, 'OH'), (3, 'WI'),
+	(4, 'IA'), (4, 'KS'), (4, 'MN'), (4, 'MO'), (4, 'NE'), (4, 'ND'), (4, 'SD'),
+	(5, 'AL'), (5, 'AR'), (5, 'FL'), (5, 'GA'), (5, 'KY'), (5, 'LA'), (5, 'MS'), (5, 'NC'), (5, 'SC'), (5, 'TN'), (5, 'VA'), (5, 'WV'),
+	(6, 'AZ'), (6, 'NM'), (6, 'OK'), (6, 'TX'),
+	(7, 'CO'), (7, 'ID'), (7, 'MT'), (7, 'UT'), (7, 'WY'),
+	(8, 'AK'), (8, 'CA'), (8, 'HI'), (8, 'NV'), (8, 'OR'), (8, 'WA'),
+	(9, 'AS'), (9, 'FM'), (9, 'GU'), (9, 'MH'), (9, 'MP'), (9, 'PR'), (9, 'PW'), (9, 'VI');
+
 DROP TABLE IF EXISTS universities;
 
 CREATE TABLE universities (
@@ -262,6 +296,10 @@ CREATE TABLE offerings (
 CREATE TABLE unistats AS
 	SELECT instnm, unitid, cntlaffi, level3, level5, level7, level19, openadmp, enrlt, webaddr, applurl, yrscoll
 	FROM universities INNER JOIN offerings USING(unitid);
+
+CREATE TABLE enrlstats AS
+	SELECT unitid, ENRLFTM, ENRLFTW, ENRLPTM, ENRLPTW
+	FROM offerings;
 
 DROP TABLE IF EXISTS sfa;
 

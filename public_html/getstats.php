@@ -46,9 +46,9 @@
 
 
 <div id="namesearch">
-		<form action="/~cs3380s15grp19/getstats.php" method = "POST">
+		<form action="<?= $_SERVER['PHP_SELF'] ?>" method = "POST">
 			Enter the name of the college you'd like to know about: 
-		<input type="text" id="uniname" name="input" />
+		<input type="text" id="uniname" name="input" <? if(isset($_POST['submit'])){echo "value=".$_POST['input'];}?> />
 		
 		<input type="submit" name="submit" id="submit" />
 		</form>
@@ -59,6 +59,7 @@
 
 
 					<!-- OUTPUTTING RELEVANT STATS ABOUT UNI FROM NAME SEARCH -->
+	<div> <!-- wrapper div added by scott -->
 	<div id="ass">
 	<?php
 			
@@ -69,154 +70,209 @@
 			$result = pg_prepare($conn, "name", "SELECT INSTNM FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");
 			$result = pg_execute($conn, "name", array("%".$nameSearched."%"));
 			if(!$result) //check if query succeeded...
-		{
-			$errormessage = pg_last_error();
-			echo "Error with 1st  query: " . $errormessage;
-			exit();
-		}
-		$arr = pg_fetch_assoc($result); //store query results in $arr var
-		$universityName = $arr['instnm'];
-		echo "<p> University Name " . $arr['instnm'] . "</p>"; //print UniversityName
-		
-		//Obtain University Stats on college:
-		$result = pg_prepare($conn, "Stats", "SELECT OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
-		$result = pg_execute($conn, "Stats", array("%".$nameSearched."%"));
+			{
+				$errormessage = pg_last_error();
+				echo "Error with 1st  query: " . $errormessage;
+				exit();
+			}
+			$arr = pg_fetch_assoc($result); //store query results in $arr var
+			$universityName = $arr['instnm'];
+			
+			//Obtain University Stats on college:
+			$result = pg_prepare($conn, "Stats", "SELECT OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
+			$result = pg_execute($conn, "Stats", array("%".$nameSearched."%"));
 			if(!$result) //check if query succeeded...
-		{
-			$errormessage = pg_last_error();
-			echo "Error with stat retrieval query: " . $errormessage;
-			exit();
-		}
+			{
+				$errormessage = pg_last_error();
+				echo "Error with stat retrieval query: " . $errormessage;
+				exit();
+			}
 		
-		$arr2 = pg_fetch_assoc($result); //ARR2 DEE TOO
-		
-		/*
-		echo "<p>" . $arr2['openadmp'] . " <- Admissions Policy Value  </p> "; //print:
-		echo "<p>" . $arr2['cntlaffi'] . " <-  University Type Value   </p>"; //print:
-		echo "<p>" . $arr2['enrlt'] . " <-  Students Currently Enrolled  </p>"; //print:
-		echo "<p>" . $arr2['level3'] . " <- Associates (level3)  </p> "; //print:
-		echo "<p>" . $arr2['level5'] . " <- Bachelors (level5)   </p>"; //print:
-		echo "<p>" . $arr2['level7'] . " <- Masters (Level7)   </p>"; //print:
-		echo "<p>" . $arr2['level19'] . " <-  Doctorate (Level19)  </p> "; //print:
-		echo "<p>" . $arr2['webaddr'] . " <-  University Website  </p>"; //print:
-		echo "<p>" . $arr2['applurl'] . " <-    Apply Here!  </p>"; //print:
-		*/
-		
-		//Calculate ADMISSIONS POLICY \\
-		switch ($arr2['openadmp'])
-		{
-			case 1:
-			echo "<p> Admissions Policy: Open </p>";
-			break;
+			$arr2 = pg_fetch_assoc($result); //ARR2 DEE TOO
 			
-			case 2:
-			echo "<p> Admissions Policy: Closed </p>";
-			break;
-			
-			default: 
-			echo "<p> Admissions Policy: Information Not Recorded </p>";
-			break;				
-		}
-		
-		//Calculate UNIVERSITY TYPE (Public, Private etc.): \\ 
-		switch ($arr2['cntlaffi'])
-		{
-			case 1:
-			echo "<p> University Type: Public </p>";
-			break;
-			
-			case 2:
-			echo "<p> University Type: Private for-profit </p>";
-			break;
-			
-			case 3: 
-			echo "<p> University Type: Private non-profit (No Religious Affiliation) </p>";
-			break;
-			
-			case 4:
-			echo "<p> University Type: Private non-profit (Religious Affiliation) </p>";
-			break;
-			
-			default: 
-			echo "<p> University Type: Information Not Recorded </p>";
-			break;				
-		}
-		
-		//CALCULATE DEGREE TYPES: \\
-		echo "<p> Degree Types Offered: </p>";
-		if ($arr2['level3'] == 1)
-		{
-			echo "<p> Associates: Yes </p>";
-		}
-		else 
-		{
-			echo "<p> Associates: Implied No </p>";
-		}
-		
-		if ($arr2['level5'] == 1)
-		{
-			echo "<p> Bachelors: Yes </p>";
-		}
-		else 
-		{
-			echo "<p> Bachelors: Implied No </p>";
-		}
-		
-		if ($arr2['level7'] == 1)
-		{
-			echo "<p> Master's: Yes </p>";
-		}
-		else 
-		{
-			echo "<p> Master's: Implied No </p>";
-		}	
+			/*
+			echo "<p>" . $arr2['openadmp'] . " <- Admissions Policy Value  </p> "; //print:
+			echo "<p>" . $arr2['cntlaffi'] . " <-  University Type Value   </p>"; //print:
+			echo "<p>" . $arr2['enrlt'] . " <-  Students Currently Enrolled  </p>"; //print:
+			echo "<p>" . $arr2['level3'] . " <- Associates (level3)  </p> "; //print:
+			echo "<p>" . $arr2['level5'] . " <- Bachelors (level5)   </p>"; //print:
+			echo "<p>" . $arr2['level7'] . " <- Masters (Level7)   </p>"; //print:
+			echo "<p>" . $arr2['level19'] . " <-  Doctorate (Level19)  </p> "; //print:
+			echo "<p>" . $arr2['webaddr'] . " <-  University Website  </p>"; //print:
+			echo "<p>" . $arr2['applurl'] . " <-    Apply Here!  </p>"; //print:
+			*/
+			if( pg_num_rows($result) == 0 ){
+				echo "<p>Sorry, we did not find any schools with that name :(</p>";
+			} else { //display stats
+				//display university name	
+				echo "<p><span class='result_type'>";
+				echo "University Name:";
+				echo "</span>";
+				echo "<span class='result'>";
+				echo $universityName;
+				echo "</span></p>";
+				//Calculate ADMISSIONS POLICY \\
+				echo "<p><span class='result_type'>";
+				echo "Admissions Policy:";
+				echo "</span>";
+				echo "<span class='result'>";
+				switch ($arr2['openadmp'])
+				{
+					case 1:
+					echo "Open";
+					break;
+					
+					case 2:
+					echo "Closed";
+					break;
+					
+					default: 
+					echo "Information Not Recorded";
+					break;				
+				}
+				echo "</span></p>";
 				
-		if ($arr2['level19'] == 1)
-		{
-			echo "<p> Doctorate: Yes </p>";
-		}
-		else 
-		{
-			echo "<p> Doctorate: Implied No </p>";
-		}
-		//////////////////////////////////////
-		
-		//Calculate Number of Students Enrolled:
-		if ($arr2['enrlt'] != NULL)
-		{
-			$studentsEnrolled = $arr2['enrlt'] * 10; //formula to obtain accurate count of number of students enrolled
-			echo "<p> Students currently enrolled: " . $studentsEnrolled . "</p>";
-		}
-		else 
-		{
-			echo "<p> Student enrollment information not currently provided </p>";	
-		}
-		
-		//Print Institution Web Address
-		if ($arr2['webaddr'] != NULL)
-		{
-			echo "<p> Visit <a href=".$arr2['webaddr'].">" . $arr2['webaddr'] . "</a></p>";
-		}
-		else 
-		{
-			echo "<p> Web Address Not Provided </p>";	
-		}
-		
-		//provide a link to the application
-		if ($arr2['applurl'] != NULL)
-		{
-			echo "<p> Apply Now! ->  <a href=".$arr2['applurl'].">" . $arr2['applurl'] . "</a></p>";
-		}
-		else 
-		{
-			echo "<p> Application Link Not Provided </p>";	
-		}
-		
-		
+				//Calculate UNIVERSITY TYPE (Public, Private etc.): \\ 
+				echo "<p><span class='result_type'>";
+				echo "University Type:";
+				echo "</span>";
+				echo "<span class='result'>";
+				switch ($arr2['cntlaffi'])
+				{
+					case 1:
+					echo "Public";
+					break;
+					
+					case 2:
+					echo "Private for-profit";
+					break;
+					
+					case 3: 
+					echo "Private non-profit (No Religious Affiliation)";
+					break;
+					
+					case 4:
+					echo "Private non-profit (Religious Affiliation)";
+					break;
+					
+					default: 
+					echo "Information Not Recorded";
+					break;				
+				}
+				echo "</span></p>";
+				
+				//CALCULATE DEGREE TYPES: \\
+				echo "<p><span class='result_type'>";
+				echo "Degree Types Offered:";
+				echo "</span></p>";
+				//associates
+				echo "<p><span class='result_subtype'>";
+				echo "Associates:";
+				echo "</span>";
+				echo "<span class='result'>";
+				if ($arr2['level3'] == 1)
+				{
+					echo "Yes";
+				} else {
+					echo "Implied No";
+				}
+				echo "</span></p>";
+				//bachelors
+				echo "<p><span class='result_subtype'>";
+				echo "Bachelors:";
+				echo "</span>";
+				echo "<span class='result'>";
+				if ($arr2['level5'] == 1)
+				{
+					echo "Yes";
+				} else {
+					echo "Implied No";
+				}
+				echo "</span></p>";
+				//masters
+				echo "<p><span class='result_subtype'>";
+				echo "Masters:";
+				echo "</span>";
+				echo "<span class='result'>";
+				if ($arr2['level7'] == 1)
+				{
+					echo "Yes";
+				} else {
+					echo "Implied No";
+				}	
+				echo "</span></p>";		
+				//masters
+				echo "<p><span class='result_subtype'>";
+				echo "Doctorate:";
+				echo "</span>";
+				echo "<span class='result'>";
+				if ($arr2['level19'] == 1)
+				{
+					echo "Yes";
+				} else {
+					echo "Implied No";
+				}	
+				echo "</span></p>";		
+				//////////////////////////////////////
+				
+				//Calculate Number of Students Enrolled:
+				echo "<p><span class='result_type'>";
+				echo "Students Currently Enrolled:";
+				echo "</span>";
+				echo "<span class='result'>";
+				if ($arr2['enrlt'] != NULL)
+				{
+					$studentsEnrolled = $arr2['enrlt'] * 10; //formula to obtain accurate count of number of students enrolled
+					echo $studentsEnrolled;
+				}
+				else 
+				{
+					echo "Information not currently provided";	
+				}
+				echo "</span></p>";
+				
+				//Print Institution Web Address
+				if ($arr2['webaddr'] != NULL)
+				{
+					echo "<p> Visit <a href=".$arr2['webaddr'].">" . $arr2['webaddr'] . "</a></p>";
+				}
+				else 
+				{
+					echo "<p> Web Address Not Provided </p>";	
+				}
+				
+				//provide a link to the application
+				if ($arr2['applurl'] != NULL)
+				{
+					echo "<p> Apply Now! ->  <a href=".$arr2['applurl'].">" . $arr2['applurl'] . "</a></p>";
+				}
+				else 
+				{
+					echo "<p> Application Link Not Provided </p>";	
+				}
+				echo "</div>";	//<!--End of RelevantStats Output Section -->
+				
+				// begin budget dropdown 
+				echo "<div id='netcost_block'>";
+				echo "<form action=". $_SERVER['PHP_SELF'] ." method = 'POST'>
+					Select your income level:";
+				
+				echo "<select name='income'>
+					<option value='NPIS412'>0-30,000</option>
+					<option value='NPIS422'>30,001-48,000</option>
+					<option value='NPIS432'>48,001-75,000</option>
+					<option value='NPIS442'>75,001-110,000</option>
+					<option value='NPIS452'>Over 110,000</option>
+					</select>";				
+				echo "<input type='submit' name='submit_income' id='submit' />
+				</form>";
+				//output cost info here
+				echo "</div>";
+			} //end display stats	
 		
 		} //end if isset submit
 	?>
-	</div>	<!--End of RelevantStats Output Section -->
+	</div>	<!--End of wrapper div->
 	</main>
 		
 </div> <!--End of pageWrapper -->

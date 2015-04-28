@@ -13,6 +13,7 @@ body {
 	margin-right: auto;
 	/*border: 3px solid black;*/
 	padding: 1px;
+	padding-bottom: 50px; /* scott added this to make it look nice */
 }
 
 #header {
@@ -67,12 +68,14 @@ body {
 #ass /*box*/
 {
 	background:#fff;
+	float:left; /*scott added this, might be terrible */
 	border: solid grey 4px;
 	box-shadow: 0px 0px 5px black;
 	margin:0 auto;
 	text-align:left;
 	width:540px;
 	border-radius: 15px;
+	padding: 5px 20px; /* scott added this to make it look nice */
 }
 
 
@@ -207,3 +210,33 @@ font-family: 'Poiret One', cursive;
 */
 
 /* # = id, . for class */
+
+
+/* scott's span formatting */
+.result_type {
+	font-style: italic;
+}
+.result {
+	font-weight: bold;
+	float:right;
+}
+
+.result_subtype {
+/*	float:left;*/
+	text-align: left;
+	font-style: italic;
+	text-indent: 10%; /* this doesn't work yet */
+}
+
+#netcost_block {
+	overflow:hidden;
+	float:right;
+	background:#fff;
+	border: solid grey 4px;
+	box-shadow: 0px 0px 5px black;
+	margin:0 auto;
+	text-align:left;
+	width:200px;
+	border-radius: 15px;
+	padding: 5px 20px; /* scott added this to make it look nice */
+}

@@ -1,0 +1,65 @@
+body { 	
+	padding: 30px 40px 10px;
+    display: block; /*adds a line break after body section*/
+    background: #f0f0f0;
+    background: rgba(0,0,0,0.06);
+    border-radius: 0 0 20px 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+header{
+	padding: 10px 20px 10px 0px;
+	font-family: 'Oswald', sans-serif;
+	font-size: 26px;	
+}
+
+#horzNav {
+	font-family: 'PT Sans', sans-serif;
+	display: block;
+	padding: 10px 20px 10px 0px;
+	background: #08C;
+	/*background: #B8ED01;*/
+}
+
+#horzNav a{ /*the links themselves*/
+	text-decoration: none; /*removes underlines*/
+	padding:  0px 0px 0px 20px;
+	color: white;
+	
+}
+
+/*should be inline*/
+#uniname {
+  display: block;
+  padding: 5px;
+  border: 4px solid #08C;
+  border-radius: 5px;
+  color: #333;
+  transition: all 0.3s ease-out;
+}
+
+#uniname:hover { border-radius: 8px; }
+#uniname:focus { 
+  outline: none;
+  border-radius: 8px; 
+  border-color: black;
+}
+
+#submit {
+  display: inline-block;
+  margin: 10px;
+  padding: 8px 15px;
+  background: #09C;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  transition: all 0.3s ease-out;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 2px 2px rgba(0,0,0,0.3),
+    0 0 4px 1px rgba(0,0,0,0.2);
+
+  /* Font styles */
+  text-decoration: none;
+  
+}

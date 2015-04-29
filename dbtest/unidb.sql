@@ -160,13 +160,13 @@ CREATE TABLE offerings (
 	XADMSSNW varchar(8),
 	ADMSSNW varchar(8),
 	XENRLFTM varchar(8),
-	ENRLFTM varchar(8),
+	ENRLFTM integer,
 	XENRLFTW varchar(8),
-	ENRLFTW varchar(8),
+	ENRLFTW integer,
 	XENRLPTM varchar(8),
-	ENRLPTM varchar(8),
+	ENRLPTM integer,
 	XENRLPTW varchar(8),
-	ENRLPTW varchar(8),
+	ENRLPTW integer,
 	SATACTDT varchar(8),
 	XSATNUM varchar(8),
 	SATNUM varchar(8),
@@ -269,19 +269,19 @@ CREATE TABLE offerings (
 	RMBRDAMT varchar(8),
 	ALLONCAM varchar(8),
 	XENRLM varchar(8),
-	ENRLM varchar(8),
+	ENRLM integer,
 	XENRLW varchar(8),
-	ENRLW varchar(8),
+	ENRLW integer,
 	XENRLT varchar(8),
-	ENRLT integer, --total enrollment
+	ENRLT varchar(8),--total enrollment
 	XAPPLCN varchar(8),
 	APPLCN varchar(8),
 	XADMSSN varchar(8),
 	ADMSSN varchar(8),
 	XENRLFT varchar(8),
-	ENRLFT varchar(8),
+	ENRLFT integer,
 	XENRLPT varchar(8),
-	ENRLPT varchar(8),
+	ENRLPT integer,
 	TUITPL varchar(8),
 	TUITPL1 varchar(8),
 	TUITPL2 varchar(8),
@@ -298,7 +298,7 @@ CREATE TABLE unistats AS
 	FROM universities INNER JOIN offerings USING(unitid);
 
 CREATE TABLE enrlstats AS
-	SELECT unitid, ENRLFTM, ENRLFTW, ENRLPTM, ENRLPTW
+	SELECT unitid, ENRLM, ENRLW, ENRLFTM, ENRLFTW, ENRLPTM, ENRLPTW
 	FROM offerings;
 
 DROP TABLE IF EXISTS sfa;

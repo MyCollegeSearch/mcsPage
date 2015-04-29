@@ -48,7 +48,7 @@
 <div id="namesearch">
 		<form action="<?= $_SERVER['PHP_SELF'] ?>" method = "POST">
 			Enter the name of the college you'd like to know about: 
-		<input type="text" id="uniname" name="input" <? if(isset($_POST['submit'])){echo "value=".$_POST['input'];}?> />
+		<input type="text" id="uniname" name="input" <? if(isset($_POST['submit'])){echo "value='".$_POST['input']."'";}?> />
 		
 		<input type="submit" name="submit" id="submit" />
 		</form>
@@ -79,7 +79,7 @@
 			$universityName = $arr['instnm'];
 			
 			//Obtain University Stats on college:
-			$result = pg_prepare($conn, "Stats", "SELECT OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
+			$result = pg_prepare($conn, "Stats", "SELECT UNITID, OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
 			$result = pg_execute($conn, "Stats", array("%".$nameSearched."%"));
 			if(!$result) //check if query succeeded...
 			{
@@ -89,7 +89,7 @@
 			}
 		
 			$arr2 = pg_fetch_assoc($result); //ARR2 DEE TOO
-			
+			$unitID = $arr2['unitid'];	
 			/*
 			echo "<p>" . $arr2['openadmp'] . " <- Admissions Policy Value  </p> "; //print:
 			echo "<p>" . $arr2['cntlaffi'] . " <-  University Type Value   </p>"; //print:
@@ -254,17 +254,19 @@
 				
 				// begin budget dropdown 
 				echo "<div id='netcost_block'>";
-				echo "<form action=". $_SERVER['PHP_SELF'] ." method = 'POST'>
+				echo "<form action='cost.php' method = 'POST'>
 					Select your income level:";
 				
 				echo "<select name='income'>
-					<option value='NPIS412'>0-30,000</option>
+					<option value='npis412'>0-30,000</option>
 					<option value='NPIS422'>30,001-48,000</option>
 					<option value='NPIS432'>48,001-75,000</option>
 					<option value='NPIS442'>75,001-110,000</option>
 					<option value='NPIS452'>Over 110,000</option>
-					</select>";				
-				echo "<input type='submit' name='submit_income' id='submit' />
+					</select>";	
+				echo "<input type='hidden' name='uniname' id='uniname' value='" .$universityName. "'>";			
+				echo "<input type='hidden' name='unitid' id='uniit' value='" .$unitID. "'>";			
+				echo "<input type='submit' name='submit' id='submit' />
 				</form>";
 				//output cost info here
 				echo "</div>";

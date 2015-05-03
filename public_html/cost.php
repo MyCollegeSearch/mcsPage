@@ -87,6 +87,7 @@
 	} else {
 		echo "Sorry, we could not find that information for you";
 	}
+	echo "\n<p><a href='getstats.php'>Go Back</a>";
 ?>
 </br>
 </br>

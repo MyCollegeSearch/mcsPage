@@ -298,7 +298,7 @@ CREATE TABLE unistats AS
 	FROM universities INNER JOIN offerings USING(unitid);
 
 CREATE TABLE enrlstats AS
-	SELECT unitid, ENRLFTM, ENRLFTW, ENRLPTM, ENRLPTW
+	SELECT unitid, ENRLFTM, ENRLFTW, ENRLPTM, ENRLPTW, enrlt
 	FROM offerings;
 
 DROP TABLE IF EXISTS sfa;

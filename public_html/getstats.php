@@ -48,7 +48,7 @@
 <div id="namesearch">
 		<form action="<?= $_SERVER['PHP_SELF'] ?>" method = "POST">
 			Enter the name of the college you'd like to know about: 
-		<input type="text" id="uniname" name="input" <? if(isset($_POST['submit'])){echo "value=".$_POST['input'];}?> />
+		<input type="text" id="uniname" name="input" <? if(isset($_POST['submit'])){echo "value='".$_POST['input']."'";}?> />
 		
 		<input type="submit" name="submit" id="submit" />
 		</form>
@@ -60,11 +60,11 @@
 
 					<!-- OUTPUTTING RELEVANT STATS ABOUT UNI FROM NAME SEARCH -->
 	<div> <!-- wrapper div added by scott -->
-	<div id="ass">
 	<?php
 			
 		if (isset($_POST['submit']))  //what can we do when search returns no values?
 		{					
+		echo "<div id='ass'>";
 			$nameSearched = htmlspecialchars($_POST['input']); //convert input to SQL INJECTION safe format
 		//PATTERN MATCH USER INPUT TO CLOSEST UNIVERSITY NAME\\
 			$result = pg_prepare($conn, "name", "SELECT INSTNM FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");
@@ -79,7 +79,7 @@
 			$universityName = $arr['instnm'];
 			
 			//Obtain University Stats on college:
-			$result = pg_prepare($conn, "Stats", "SELECT OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
+			$result = pg_prepare($conn, "Stats", "SELECT UNITID, OPENADMP, CNTLAFFI, ENRLT, LEVEL3, LEVEL5, LEVEL7, LEVEL19, WEBADDR, APPLURL FROM unidb.unistats WHERE INSTNM ILIKE $1 LIMIT 1");		
 			$result = pg_execute($conn, "Stats", array("%".$nameSearched."%"));
 			if(!$result) //check if query succeeded...
 			{
@@ -89,7 +89,7 @@
 			}
 		
 			$arr2 = pg_fetch_assoc($result); //ARR2 DEE TOO
-			
+			$unitID = $arr2['unitid'];	
 			/*
 			echo "<p>" . $arr2['openadmp'] . " <- Admissions Policy Value  </p> "; //print:
 			echo "<p>" . $arr2['cntlaffi'] . " <-  University Type Value   </p>"; //print:
@@ -253,19 +253,70 @@
 				echo "</div>";	//<!--End of RelevantStats Output Section -->
 				
 				// begin budget dropdown 
+				//prepare a query to return the cost for each income level in a single row
+				$result = pg_prepare($conn, "cost", "SELECT NPIS412, NPIS422, NPIS432, NPIS442, NPIS452
+ 									FROM unidb.tuitstats 
+									WHERE unitid = $1
+									LIMIT 1");		
+				if(!$result) //check if query succeeded...
+				{
+					$errormessage = pg_last_error();
+					echo "Error with cost query preparation: " . $errormessage;
+					exit();
+				}
+				$result = pg_execute($conn, "cost", array($unitID));
+				if(!$result) //check if query succeeded...
+				{
+					$errormessage = pg_last_error();
+					echo "Error with cost query execution: " . $errormessage;
+					exit();
+				}
+				$row = pg_fetch_assoc($result);
 				echo "<div id='netcost_block'>";
-				echo "<form action=". $_SERVER['PHP_SELF'] ." method = 'POST'>
-					Select your income level:";
-				
-				echo "<select name='income'>
-					<option value='NPIS412'>0-30,000</option>
-					<option value='NPIS422'>30,001-48,000</option>
-					<option value='NPIS432'>48,001-75,000</option>
-					<option value='NPIS442'>75,001-110,000</option>
-					<option value='NPIS452'>Over 110,000</option>
-					</select>";				
-				echo "<input type='submit' name='submit_income' id='submit' />
-				</form>";
+				$display_income_options = FALSE;
+				//check that there are results
+				foreach( $row AS $column ){
+					if(!is_null($column)){
+						$display_income_result = TRUE;
+					}
+				} //end foreach
+				if($display_income_result){
+					//reset($row);
+					echo "<form action='cost.php' method = 'POST'>
+						Select your income level:";
+					
+					echo "<select name='income'>";
+					$i = 0;
+					//hilarious terrible conversion chart
+					$legend = array(
+						0 => "0-30,000",
+						1 => "30,001-48,000",
+						2 => "48,001-75,000",
+						3 => "75,001-110,000",
+						4 => "Over 110,000",
+					);
+					foreach($row as $column){
+						if(!is_null($column)){
+							echo "<option value='".pg_field_name($result, $i)."'>$legend[$i]</option>";
+						}
+						$i++;
+					}
+					echo "</select>";
+					/*
+						<option value='npis412'>0-30,000</option>
+						<option value='NPIS422'>30,001-48,000</option>
+						<option value='NPIS432'>48,001-75,000</option>
+						<option value='NPIS442'>75,001-110,000</option>
+						<option value='NPIS452'>Over 110,000</option>
+						</select>";
+					*/	
+					echo "<input type='hidden' name='uniname' id='uniname' value='" .$universityName. "'>";			
+					echo "<input type='hidden' name='unitid' id='uniit' value='" .$unitID. "'>";			
+					echo "<input type='submit' name='submit' id='submit' />";
+					echo "</form>";
+				} else { //there were no income options
+					echo "Sorry, there is no net-cost information available for this school";
+				}
 				//output cost info here
 				echo "</div>";
 			} //end display stats	
